@@ -1,0 +1,3 @@
+variable "rgj" {}
+variable "vnets" {}
+  
