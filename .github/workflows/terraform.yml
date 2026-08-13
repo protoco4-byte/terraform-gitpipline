@@ -1,0 +1,51 @@
+name: Terraform CI
+
+on:
+  push:
+    branches:
+      - main
+      - feature/terraform-rg-vnet
+
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: enivorment/dev
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+
+          client-id: "3b0eea09-dc4e-46ef-acfc-8972f8a1c0d5"
+    
+          tenant-id: "453f8321-3cb4-4f15-bf44-4544f4198c66"
+          subscription-id: "1b17fba3-24d7-46a8-be64-97ad373509ca"
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Format
+        run: terraform fmt -check
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan
